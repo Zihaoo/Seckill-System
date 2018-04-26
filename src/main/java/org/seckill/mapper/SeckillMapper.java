@@ -1,5 +1,6 @@
 package org.seckill.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.seckill.model.Seckill;
 
 import java.util.Date;
@@ -13,7 +14,7 @@ public interface SeckillMapper {
      * @param killTime
      * @return  如果影响行数>1,表示跟新的记录行数
      */
-    int reduceNumber(long seckillId, Date killTime);
+    int reduceNumber(@Param("seckillId") long seckillId,@Param("killTime") Date killTime);
 
     /**
      * 根据id查询秒杀对象
@@ -24,11 +25,11 @@ public interface SeckillMapper {
 
     /**
      * 根据偏移量查询秒杀商品列表
-     * @param offet
+     * @param offset
      * @param limit
      * @return
      */
-    List<Seckill> queryAll(int offet,int limit);
+    List<Seckill> queryAll(@Param("offset") int offset,@Param("limit") int limit);
 
 
 }

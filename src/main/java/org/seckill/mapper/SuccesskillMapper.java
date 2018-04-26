@@ -1,5 +1,6 @@
 package org.seckill.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.seckill.model.SuccessKilled;
 
 public interface SuccesskillMapper {
@@ -11,13 +12,13 @@ public interface SuccesskillMapper {
      * @return
      *  返回插入的行数
      */
-    int insertSuccessKilled(long seckillId,long userPhone);
+    int insertSuccessKilled(@Param("seckillId") long seckillId,@Param("userPhone") long userPhone);
 
     /**
      * 根据id查询SucessKilled并携带秒杀产品对象实体
      * @param seckillId
      * @return
      */
-    SuccessKilled queryByIdWithSeckill(long seckillId);
+    SuccessKilled queryByIdWithSeckill(@Param("seckillId") long seckillId,@Param("userPhone") long userPhone);
 
 }
