@@ -6,6 +6,9 @@
         <fileset id="fileset" name="spring-dao.xml" removed="false">
           <file>file://$MODULE_DIR$/src/main/resources/spring/spring-dao.xml</file>
         </fileset>
+        <fileset id="fileset2" name="spring-service" removed="false">
+          <file>file://$MODULE_DIR$/src/main/resources/spring/spring-service.xml</file>
+        </fileset>
       </configuration>
     </facet>
   </component>
