@@ -5,6 +5,21 @@
          version="3.1"
          metadata-complete="true">
   <!--用maven创建的web-app需要修改servlet的版本为3.1-->
+  <!--配置DispatherServlet-->
+  <servlet>
+    <servlet-name>seckill-dispather</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <!--配置SpringMvc需要加载的配置文件 dao.xml service.xml web.xml-->
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-vlaue>classpath:spring/spring-*.xml</param-vlaue>
+    </init-param>
+    <servlet-mapping>
+      <servlet-name>seckill-dispather</servlet-name>
+      <!--默认匹配所有请求-->
+      <url-pattern>/</url-pattern>
+    </servlet-mapping>
+  </servlet>
 
 
 </web-app>
