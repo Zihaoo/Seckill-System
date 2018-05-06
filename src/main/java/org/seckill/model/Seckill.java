@@ -4,19 +4,29 @@ import java.util.Date;
 
 public class Seckill {
 
-    private long seckillid;
+//    private long seckillid;
+    private long seckillId;
     private String name;
     private int number; //商品数量
     private Date startTime;
     private  Date endTime;
     private  Date createTime;
 
-    public long getSeckillid() {
-        return seckillid;
+//    public long getSeckillid() {
+//        return seckillid;
+//    }
+//
+//    public void setSeckillid(long seckillid) {
+//        this.seckillid = seckillid;
+//    }
+
+
+    public long getSeckillId() {
+        return seckillId;
     }
 
-    public void setSeckillid(long seckillid) {
-        this.seckillid = seckillid;
+    public void setSeckillId(long seckillId) {
+        this.seckillId = seckillId;
     }
 
     public String getName() {
@@ -62,7 +72,7 @@ public class Seckill {
     @Override
     public String toString() {
         return "Seckill{" +
-                "seckillid=" + seckillid +
+                "seckilId" + seckillId +
                 ", name='" + name + '\'' +
                 ", number=" + number +
                 ", startTime=" + startTime +

@@ -9,6 +9,9 @@
         <fileset id="fileset2" name="spring-service" removed="false">
           <file>file://$MODULE_DIR$/src/main/resources/spring/spring-service.xml</file>
         </fileset>
+        <fileset id="fileset3" name="spring-web.xml" removed="false">
+          <file>file://$MODULE_DIR$/src/main/resources/spring/spring-web.xml</file>
+        </fileset>
       </configuration>
     </facet>
   </component>
