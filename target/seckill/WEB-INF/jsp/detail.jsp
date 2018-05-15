@@ -174,7 +174,6 @@
                             $(this).addClass('disabled');
                             //2.发送秒杀请求执行秒杀
                             $.post(killUrl, {}, function (result) {
-                                console.log('执行ajax' + result['stateInfo']);
                                 if (result && result['success']) {
                                     console.log('执行到判断')
                                     var killResult = result['data'];

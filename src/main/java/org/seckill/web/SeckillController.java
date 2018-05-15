@@ -54,7 +54,7 @@ public class SeckillController {
         return "detail";
     }
 
-    // ajax json
+    // ajax json  暴露接口
     @RequestMapping(value = "/{seckillId}/exposer", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     @ResponseBody
     public SeckillResult<Exposer> exposer(@PathVariable("seckillId") Long seckillId) {
@@ -69,6 +69,7 @@ public class SeckillController {
         return result;
     }
 
+    //暴露接口执行秒杀
     @RequestMapping(value = "/{seckillId}/{md5}/execution", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     @ResponseBody
     public SeckillResult<SeckillExecution> execute(@PathVariable("seckillId") Long seckillId,

@@ -11,7 +11,7 @@ public interface SeckillMapper {
     /**
      * 减库存
      * @param seckillId
-     * @param killTime
+     * @param killTime  秒杀执行时间
      * @return  如果影响行数>1,表示跟新的记录行数
      */
     int reduceNumber(@Param("seckillId") long seckillId,@Param("killTime") Date killTime);

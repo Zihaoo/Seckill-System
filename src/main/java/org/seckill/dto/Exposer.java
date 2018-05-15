@@ -1,7 +1,7 @@
 package org.seckill.dto;
 
 /**
- * 不暴露秒杀地址
+ * 暴露秒杀地址
  */
 public class Exposer {
 

@@ -54,9 +54,9 @@
         <property name="basePackage" value="org.seckill.mapper"/>
     </bean>
 
-    <!--&lt;!&ndash;redisDao&ndash;&gt;-->
-    <!--<bean id="redisDao" class="cn.codingxiaxw.dao.cache.RedisDao">-->
-        <!--<constructor-arg index="0" value="localhost"/>-->
-        <!--<constructor-arg index="1" value="6379"/>-->
-    <!--</bean>-->
+    <!--redisDao-->
+    <bean id="redisDao" class="org.seckill.mapper.cache.RedisDao">
+        <constructor-arg index="0" value="localhost"/>
+        <constructor-arg index="1" value="6379"/>
+    </bean>
 </beans>

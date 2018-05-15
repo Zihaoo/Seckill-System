@@ -8,6 +8,7 @@ import org.seckill.exception.SeckillCloseException;
 import org.seckill.exception.SeckillException;
 import org.seckill.mapper.SeckillMapper;
 import org.seckill.mapper.SuccesskillMapper;
+import org.seckill.mapper.cache.RedisDao;
 import org.seckill.model.Seckill;
 import org.seckill.model.SuccessKilled;
 import org.seckill.service.SeckillService;
@@ -27,10 +28,14 @@ public class SeckillServiceImpl implements SeckillService {
 
 
     private  Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private SeckillMapper seckillMapper;
     @Autowired
     private SuccesskillMapper successkillMapper;
+
+    @Autowired
+    private RedisDao redisDao;
 
     //md5盐字符,混淆
     private final String salt = "shsdssljdd'l.";
@@ -48,10 +53,20 @@ public class SeckillServiceImpl implements SeckillService {
 
     //秒杀开始输出地址
     public Exposer exportSeckillUrl(long seckillId) {
-        Seckill seckill = seckillMapper.queryById(seckillId);
-        if (seckill == null) {
-            return new Exposer(false, seckillId);
+        //优化点:缓存优化,一致性维护:超时的基础上
+        //1.访问redis
+        Seckill seckill = redisDao.getSeckill(seckillId);
+        if(seckill == null) {
+            //缓存中没有 2.访问数据库
+            seckill = seckillMapper.queryById(seckillId);
+            if (seckill == null) {      //商品不存在,没法暴露接口
+                return new Exposer(false, seckillId);
+            } else {
+                //3.放入redis
+                redisDao.putSeckill(seckill);
+            }
         }
+
         Date startTime = seckill.getStartTime();
         Date endTime = seckill.getEndTime();
         Date nowTime = new Date();
@@ -83,26 +98,28 @@ public class SeckillServiceImpl implements SeckillService {
         }
         //秒杀逻辑:减库存 + 记录购买行为
         Date nowTime = new Date();
-        //减库存
-        int updateCount = seckillMapper.reduceNumber(seckillId, nowTime);
+
 
         try {
-            if (updateCount <= 0) {
-                //没有跟新记录,秒杀结束
-                throw new SeckillCloseException("seckill is closed");
+            // 1.记录购买行为操作insert
+            int insertCount = successkillMapper.insertSuccessKilled(seckillId, userPhone);
+            //insert失败,重复秒杀了(注意insert加了ignore,所以我这里才可以获得影响行数为0,抛出自己的异常,否则会系统来报错)
+            if (insertCount <= 0) {
+                throw new RepeatKilException("seckill repated");
             } else {
-                // 记录购买行为
-                int insertCount = successkillMapper.insertSuccessKilled(seckillId, userPhone);
-                //唯一:seckill,userPhone
-                if (insertCount <= 0) {
-                    throw new RepeatKilException("seckill repated");
+                //2.减库存,热点商品竞争update, 这里add rowLock用来缩短时间
+                int updateCount = seckillMapper.reduceNumber(seckillId, nowTime);
+                if (updateCount <= 0) {
+                    //没有跟新记录,秒杀结束(卖空了或时间结束)
+                    throw new SeckillCloseException("seckill is closed");
                 } else {
-                    //秒杀成功
+                    //秒杀成功,commit,同时free rowback
                     SuccessKilled successKilled = successkillMapper.queryByIdWithSeckill(seckillId, userPhone);
                     return new SeckillExecution(seckillId, SeckillStatEnum.SUCCESS, successKilled);
-
                 }
+
             }
+
         } catch (SeckillCloseException e1) {
             throw e1;
         } catch (RepeatKilException e2) {
